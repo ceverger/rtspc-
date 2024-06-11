@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
-#include "rtsprequestparser.h"
+#include "requestparser.hpp"
 
 	void RTSPRequestParser::parseMethod(const char *message)
 	{
@@ -45,7 +45,7 @@
 			return;
 		}
 
-		if(strstr(pos, "rtsp://") == nullptr) return;
+		if(strstr(pos, "rtsp://") == NULL) return;
 
 		while(i < ressize && pos[i] != ' ')
 		{
@@ -57,9 +57,9 @@
 		reslen = strlen(result);
 	}
 
-	void RTSPRequestParser::parseLogin(char buf, int bufsize)
+	void RTSPRequestParser::parseLogin(char *buf, int bufsize)
 	{
-		if(buf == nullptr || reslen <= 1) return;
+		if(buf == NULL || reslen <= 1) return;
 
 		int i = 0;
 		int cachesize = 1024;
@@ -67,7 +67,7 @@
 		char *pos, *cur, *end;
 
  		pos = strstr(result, "rtsp://");
-		if(pos == nullptr) return;
+		if(pos == NULL) return;
 
 		cur = pos + strlen("rtsp://");
 		end = result + strlen(result);
@@ -76,8 +76,8 @@
 
 		while((i < cachesize) && (i < cur - pos))
 		{
-			cache[i] = pos[i]
-			i++
+			cache[i] = pos[i];
+			i++;
 		}
 
 		i = 0;
@@ -86,10 +86,10 @@
 		pos = cache;
 		cur = pos;
 		end = strchr(cur, '@');
-		if(end == nullptr) return;
+		if(end == NULL) return;
 
-		while(*cur != ':' && cur != '\0') cur++;
-		if(cur == '\0') return;
+		while(*cur != ':' && *cur != '\0') cur++;
+		if(*cur == '\0') return;
 
 		if(cur - pos == 0) return;
 
@@ -104,9 +104,9 @@
 		buf[i] = '\0';
 	}
 
-	void RTSPRequestParser::parsePassword(char buf, int bufsize)
+	void RTSPRequestParser::parsePassword(char *buf, int bufsize)
 	{
-		if(buf == nullptr || reslen <= 1) return;
+		if(buf == NULL || reslen <= 1) return;
 
 		int i = 0;
 		int cachesize = 1024;
@@ -114,7 +114,7 @@
 		char *pos, *cur, *end;
 
  		pos = strstr(result, "rtsp://");
-		if(pos == nullptr) return;
+		if(pos == NULL) return;
 
 		cur = pos + strlen("rtsp://");
 		end = result + strlen(result);
@@ -123,8 +123,8 @@
 
 		while((i < cachesize) && (i < cur - pos))
 		{
-			cache[i] = pos[i]
-			i++
+			cache[i] = pos[i];
+			i++;
 		}
 
 		i = 0;
@@ -133,10 +133,10 @@
 		pos = cache;
 		cur = pos;
 		end = strchr(cur, '@');
-		if(end == nullptr) return;
+		if(end == NULL) return;
 
-		while(*cur != ':' && cur != '\0') cur++;
-		if(cur == '\0') return;
+		while(*cur != ':' && *cur != '\0') cur++;
+		if(*cur == '\0') return;
 
 		if(cur - pos == 0) return;
 		cur++;
@@ -152,9 +152,9 @@
 		buf[i] = '\0';
 	}
 
-	void RTSPRequestParser::parseURL(char buf, int bufsize)
+	void RTSPRequestParser::parseURL(char *buf, int bufsize)
 	{
-		if(buf == nullptr || reslen <= 1) return;
+		if(buf == NULL || reslen <= 1) return;
 
 		int i = 0;
 		int cachesize = 1024;
@@ -162,7 +162,7 @@
 		char *pos, *cur, *end;
 
  		pos = strstr(result, "rtsp://");
-		if(pos == nullptr) return;
+		if(pos == NULL) return;
 
 		cur = pos;
 		end = result + strlen(result);
@@ -170,24 +170,24 @@
 		while(*cur != '/' && cur != end) cur++;
 	}
 
-	 int RTSPRequestParser::parsePort(const char *uri)
+	 int RTSPRequestParser::parsePort()
 	 {
-	 	 
+	 	 return 0;
 	 }
 
-	void RTSPRequestParser::parseURN(const char *uri)
+	void RTSPRequestParser::parseURN(char *buf, int bufsize)
 	{
 		
 	}
 
-	void RTSPRequestParser::parseAccept(const char *message)
+	void RTSPRequestParser::parseAccept(char *message)
 	{
 		if(message == NULL) return;
 
 		int i = 0;
 		char *pos = strstr(message, "Accept: ");
 
-		if(pos == NULL) return -1;
+		if(pos == NULL) return;
 
 		reset();
 
@@ -203,14 +203,14 @@
 		reslen = strlen(result);		
 	}
 
-	void RTSPRequestParser::parseAcceptEncoding(const char *message)
+	void RTSPRequestParser::parseAcceptEncoding(char *message)
 	{
 		if(message == NULL) return;
 
 		int i = 0;
 		char *pos = strstr(message, "Accept-Encoding: ");
 
-		if(pos == NULL) return -1;
+		if(pos == NULL) return;
 
 		reset();
 
@@ -226,14 +226,14 @@
 		reslen = strlen(result);		
 	}
 
-	void RTSPRequestParser::parseAcceptLanguage(const char *message)
+	void RTSPRequestParser::parseAcceptLanguage(char *message)
 	{
 		if(message == NULL) return;
 
 		int i = 0;
 		char *pos = strstr(message, "Accept-Language: ");
 
-		if(pos == NULL) return -1;
+		if(pos == NULL) return;
 
 		reset();
 
@@ -249,9 +249,9 @@
 		reslen = strlen(result);	
 	}
 
-	void RTSPRequestParser::parseBandwidth(const char *message)
+	int RTSPRequestParser::parseBandwidth(char *message)
 	{
-		if(message == NULL) return;
+		if(message == NULL) return -1;
 
 		int i = 0;
 		char bufsize = 8;
@@ -273,9 +273,9 @@
 		return strtol(buf, NULL, 10);	
 	}
 
-	 int RTSPRequestParser::parseBlocksize(const char *message)
+	 int RTSPRequestParser::parseBlocksize(char *message)
 	 {
-		if(message == NULL) return;
+		if(message == NULL) return -1;
 
 		int i = 0;
 		char bufsize = 8;
@@ -297,14 +297,14 @@
 		return strtol(buf, NULL, 10);		 
 	 }
 
-	void RTSPRequestParser::parseConference(const char *message)
+	void RTSPRequestParser::parseConference(char *message)
 	{
 		if(message == NULL) return;
 
 		int i = 0;
 		char *pos = strstr(message, "Conference: ");
 
-		if(pos == NULL) return -1;
+		if(pos == NULL) return;
 
 		reset();
 
@@ -320,14 +320,14 @@
 		reslen = strlen(result);
 	}
 
-	void RTSPRequestParser::parseFrom(const char *message)
+	void RTSPRequestParser::parseFrom(char *message)
 	{
 		if(message == NULL) return;
 
 		int i = 0;
 		char *pos = strstr(message, "From: ");
 
-		if(pos == NULL) return -1;
+		if(pos == NULL) return;
 
 		reset();
 
@@ -343,14 +343,14 @@
 		reslen = strlen(result);
 	}
 
-	void RTSPRequestParser::parseIfModifiedSince(const char *message)
+	void RTSPRequestParser::parseIfModifiedSince(char *message)
 	{
 		if(message == NULL) return;
 
 		int i = 0;
 		char *pos = strstr(message, "If-Modified-Since: ");
 
-		if(pos == NULL) return -1;
+		if(pos == NULL) return;
 
 		reset();
 
@@ -366,14 +366,14 @@
 		reslen = strlen(result);
 	}
 
-	void RTSPRequestParser::parseProxyRequire(const char *message)
+	void RTSPRequestParser::parseProxyRequire(char *message)
 	{
 		if(message == NULL) return;
 
 		int i = 0;
 		char *pos = strstr(message, "Proxy-Require: ");
 
-		if(pos == NULL) return -1;
+		if(pos == NULL) return;
 
 		reset();
 
@@ -389,14 +389,14 @@
 		reslen = strlen(result);		
 	}
 
-	void RTSPRequestParser::parseReferer(const char *message)
+	void RTSPRequestParser::parseReferer(char *message)
 	{
 		if(message == NULL) return;
 
 		int i = 0;
 		char *pos = strstr(message, "Referer: ");
 
-		if(pos == NULL) return -1;
+		if(pos == NULL) return;
 
 		reset();
 
@@ -412,14 +412,14 @@
 		reslen = strlen(result);		
 	}
 
-	void RTSPRequestParser::parseReuire(const char *message)
+	void RTSPRequestParser::parseReuire(char *message)
 	{
 		if(message == NULL) return;
 
 		int i = 0;
 		char *pos = strstr(message, "Reuire: ");
 
-		if(pos == NULL) return -1;
+		if(pos == NULL) return;
 
 		reset();
 
@@ -435,14 +435,14 @@
 		reslen = strlen(result);		
 	}
 
-	void RTSPRequestParser::parseUserAgent(const char *message)
+	void RTSPRequestParser::parseUserAgent(char *message)
 	{
 		if(message == NULL) return;
 
 		int i = 0;
 		char *pos = strstr(message, "User-Agent: ");
 
-		if(pos == NULL) return -1;
+		if(pos == NULL) return;
 
 		reset();
 

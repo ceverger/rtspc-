@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
-#include "rtspparser.h"
+#include "rtspparser.hpp"
 
 	RTSPParser::RTSPParser()
 	{
@@ -12,17 +12,17 @@
 
 			reslen = 0;
 			bzero(result, ressize);
-			errstr = nullptr;
+			errorString = nullptr;
 	}
 
-	void RTSPParser::parseCacheControl(const char *message)
+	void RTSPParser::parseCacheControl(char *message)
 	{
 		if(message == NULL) return;
 
 		int i = 0;
 		char *pos = strstr(message, "Content-Control: ");
 
-		if(pos == NULL) return -1;
+		if(pos == NULL) return ;
 
 		reset();
 
@@ -38,14 +38,14 @@
 		reslen = strlen(result);
 	}
 
-	void RTSPParser::parseConnection(const char *message)
+	void RTSPParser::parseConnection(char *message)
 	{
 		if(message == NULL) return;
 
 		int i = 0;
 		char *pos = strstr(message, "Connection: ");
 
-		if(pos == NULL) return -1;
+		if(pos == NULL) return;
 
 		reset();
 
@@ -61,14 +61,14 @@
 		reslen = strlen(result);			
 	}
 
-	void RTSPParser::parseContentBase(const char *message)
+	void RTSPParser::parseContentBase(char *message)
 	{
 		if(message == NULL) return;
 
 		int i = 0;
 		char *pos = strstr(message, "Content-Base: ");
 
-		if(pos == NULL) return -1;
+		if(pos == NULL) return;
 
 		reset();
 
@@ -84,14 +84,14 @@
 		reslen = strlen(result);
 	}
 
-	void RTSPParser::parseContentEncoding(const char *message)
+	void RTSPParser::parseContentEncoding(char *message)
 	{
 		if(message == NULL) return;
 
 		int i = 0;
 		char *pos = strstr(message, "Content-Encoding: ");
 
-		if(pos == NULL) return -1;
+		if(pos == NULL) return;
 
 		reset();
 
@@ -107,14 +107,14 @@
 		reslen = strlen(result);
 	}
 
-	void RTSPParser::parseContentLanguage(const char *message)
+	void RTSPParser::parseContentLanguage(char *message)
 	{
 		if(message == NULL) return;
 
 		int i = 0;
 		char *pos = strstr(message, "Content-Language: ");
 
-		if(pos == NULL) return -1;
+		if(pos == NULL) return;
 
 		reset();
 
@@ -130,9 +130,9 @@
 		reslen = strlen(result);
 	}
 
-	int RTSPParser::parseContentLength(const char *message)
+	int RTSPParser::parseContentLength(char *message)
 	{
-		if(message == NULL) return;
+		if(message == NULL) return -1;
 
 		int i = 0;
 		char *pos;
@@ -155,14 +155,14 @@
 		return strtol(buf, NULL, 10);
 	}
 
-	void RTSPParser::parseContentLocation(const char *message)
+	void RTSPParser::parseContentLocation(char *message)
 	{
 		if(message == NULL) return;
 
 		int i = 0;
 		char *pos = strstr(message, "Content-Location: ");
 
-		if(pos == NULL) return -1;
+		if(pos == NULL) return;
 
 		reset();
 
@@ -178,14 +178,14 @@
 		reslen = strlen(result);		
 	}
 
-	void RTSPParser::parseContentType(const char *message)
+	void RTSPParser::parseContentType(char *message)
 	{
 		if(message == NULL) return;
 
 		int i = 0;
 		char *pos = strstr(message, "Content-Type: ");
 
-		if(pos == NULL) return -1;
+		if(pos == NULL) return;
 
 		reset();
 
@@ -233,11 +233,11 @@
 		buf[i] = '\0';
 	}
 
-	int RTSPParser::parseCSeq(const char *message)
+	int RTSPParser::parseCSeq(char *message)
 	{
 		/* Получение номера сообщения */
 
-			if(message == NULL) return;
+			if(message == NULL) return -1;
 
 			int i = 0;
 			char bufsize = 16;
@@ -261,7 +261,7 @@
 			return strtol(buf, NULL, 10);	
 	}
 
-	void RTSPParser::parseDate(const char *message)
+	void RTSPParser::parseDate(char *message)
 	{
 
 		if(message == NULL) return;
@@ -269,7 +269,7 @@
 		int i = 0;
 		char *pos = strstr(message, "Date: ");
 
-		if(pos == NULL) return -1;
+		if(pos == NULL) return;
 
 		reset();
 
@@ -285,14 +285,14 @@
 		reslen = strlen(result);
 	}
 
-	void RTSPParser::parseExpires(const char *message)
+	void RTSPParser::parseExpires(char *message)
 	{
 		if(message == NULL) return;
 
 		int i = 0;
 		char *pos = strstr(message, "Expires: ");
 
-		if(pos == NULL) return -1;
+		if(pos == NULL) return;
 
 		reset();
 
@@ -308,14 +308,14 @@
 		reslen = strlen(result);
 	}
 
-	void RTSPParser::parseLastModified(const char *message)
+	void RTSPParser::parseLastModified(char *message)
 	{
 		if(message == NULL) return;
 
 		int i = 0;
 		char *pos = strstr(message, "Last-Modified: ");
 
-		if(pos == NULL) return -1;
+		if(pos == NULL) return;
 
 		reset();
 
@@ -331,14 +331,14 @@
 		reslen = strlen(result);		
 	}
 
-	void RTSPParser::parseRange(const char *message)
+	void RTSPParser::parseRange(char *message)
 	{
 		if(message == NULL) return;
 
 		int i = 0;
 		char *pos = strstr(message, "Range: ");
 
-		if(pos == NULL) return -1;
+		if(pos == NULL) return;
 
 		reset();
 
@@ -354,9 +354,9 @@
 		reslen = strlen(result);	
 	}
 
-	double RTSPParser::parseScale(const char *message)
+	double RTSPParser::parseScale(char *message)
 	{
-		if(message == NULL) return;
+		if(message == NULL) return -1;
 
 		int i = 0;
 		char *pos;
@@ -379,14 +379,14 @@
 		return strtol(buf, NULL, 10);
 	}
 
-	void RTSPParser::parseServer(const char *message)
+	void RTSPParser::parseServer(char *message)
 	{
 		if(message == NULL) return;
 
 		int i = 0;
 		char *pos = strstr(message, "Server: ");
 
-		if(pos == NULL) return -1;
+		if(pos == NULL) return;
 
 		reset();
 
@@ -402,14 +402,14 @@
 		reslen = strlen(result);		
 	}
 
-	void RTSPParser::parseSession(const char *message)
+	void RTSPParser::parseSession(char *message)
 	{
 		if(message == NULL) return;
 
 		int i = 0;
 		char *pos = strstr(message, "Session:");
 
-		if(pos == NULL) return -1;
+		if(pos == NULL) return;
 
 		reset();
 
@@ -445,7 +445,7 @@
 
 	int RTSPParser::parseSessionTimeout()
 	{
-		if(strstr(result, "Session:") == NULL) return;
+		if(strstr(result, "Session:") == NULL) return -1;
 
 		int i = 0;
 		char *pos;
@@ -468,9 +468,9 @@
 		return strtol(buf, NULL, 10);
 	}
 
-	int RTSPParser::parseSpeed(const char *message)
+	int RTSPParser::parseSpeed(char *message)
 	{
-		if(message == NULL) return;
+		if(message == NULL) return -1;
 
 		int i = 0;
 		char bufsize = 8;
@@ -492,14 +492,14 @@
 		return strtol(buf, NULL, 10);
 	}
 
-	void RTSPParser::parseVia(const char *message)
+	void RTSPParser::parseVia(char *message)
 	{
 		if(message == NULL) return;
 
 		int i = 0;
 		char *pos = strstr(message, "Via:");
 
-		if(pos == NULL) return -1;
+		if(pos == NULL) return;
 
 		reset();
 
@@ -521,5 +521,5 @@
 
 			reslen = 0;
 			bzero(result, ressize);
-			errstr = 0;			
+			errorString = 0;			
 	}

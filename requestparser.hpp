@@ -1,6 +1,6 @@
 // requestparser.hpp - описание класса RTSPRequestParser для парсинга rtsp-запросов
 
-#include "rtspparser.h"
+#include "rtspparser.hpp"
 
 #ifndef RTSP_REQUEST_PARSER_HPP
 
@@ -18,28 +18,28 @@
 				void parseMethod(const char *message);
 
 				void parseURI(const char *message);
-				void parseLogin(char buf, int bufsize);
-				void parsePassword(char buf, int bufsize);
-				void parseURL(char buf, int bufsize);
+				void parseLogin(char *buf, int bufsize);
+				void parsePassword(char *buf, int bufsize);
+				void parseURL(char *buf, int bufsize);
 				 int parsePort();
-				void parseURN(char buf, int bufsize);
+				void parseURN(char *buf, int bufsize);
 
-				void parseVersion(const char *message);
+				void parseVersion(char *message);
 
-				void parseAccept(const char *message);
-				void parseAcceptEncoding(const char *message);
-				void parseAcceptLanguage(const char *message);
+				void parseAccept(char *message);
+				void parseAcceptEncoding(char *message);
+				void parseAcceptLanguage(char *message);
 
-				void parseAuthorization(const char *message);
-				 int parseBandwidth(const char *message);
-				 int parseBlocksize(const char *message);
-				void parseConference(const char *message);
-				void parseFrom(const char *message);
-				void parseIfModifiedSince(const char *message);
-				void parseProxyRequire(const char *message);
-				void parseReferer(const char *message);
-				void parseReuire(const char *message);
-				void parseUserAgent(const char *message);
+				void parseAuthorization(char *message);
+				 int parseBandwidth(char *message);
+				 int parseBlocksize(char *message);
+				void parseConference(char *message);
+				void parseFrom(char *message);
+				void parseIfModifiedSince(char *message);
+				void parseProxyRequire(char *message);
+				void parseReferer(char *message);
+				void parseReuire(char *message);
+				void parseUserAgent(char *message);
 
 			/* Чекеры класса  */
 
