@@ -17,11 +17,12 @@
 
 				void parseMethod(const char *message);
 
-				void parseURI(const char *message);
+				void parseURL(const char *message);
 				void parseLogin(char *buf, int bufsize);
 				void parsePassword(char *buf, int bufsize);
-				void parseURL(char *buf, int bufsize);
+				void parseHost(char *buf, int bufsize);
 				 int parsePort();
+				void parseURI(char *buf, int bufsize);
 				void parseURN(char *buf, int bufsize);
 
 				void parseVersion(char *message);

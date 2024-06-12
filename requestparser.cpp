@@ -26,8 +26,10 @@
 		reslen = strlen(result);
 	}
 
-	void RTSPRequestParser::parseURI(const char *message)
+	void RTSPRequestParser::parseURL(const char *message)
 	{
+		/* Получение URL */
+
 		if(message == NULL) return;
 		
 		int i = 0;
@@ -59,6 +61,8 @@
 
 	void RTSPRequestParser::parseLogin(char *buf, int bufsize)
 	{
+		/* Получение логина пользователя  */
+
 		if(buf == NULL || reslen <= 1) return;
 
 		int i = 0;
@@ -66,13 +70,15 @@
 		char cache[cachesize];
 		char *pos, *cur, *end;
 
+		bzero(buf, bufsize);
+
  		pos = strstr(result, "rtsp://");
 		if(pos == NULL) return;
 
 		cur = pos + strlen("rtsp://");
-		end = result + strlen(result);
+		end = result + reslen;
 
-		while(*cur != '/' && cur != end) cur++;
+		while(*cur != '/' && *cur != '\0') cur++;
 
 		while((i < cachesize) && (i < cur - pos))
 		{
@@ -80,22 +86,22 @@
 			i++;
 		}
 
-		i = 0;
 		cache[i] = '\0';
+		i = 0;
 
-		pos = cache;
+		pos = cache + strlen("rtsp://");
 		cur = pos;
-		end = strchr(cur, '@');
-		if(end == NULL) return;
+		end = cache + strlen(cache);
 
-		while(*cur != ':' && *cur != '\0') cur++;
+		while(*cur != '@' && cur != end) cur++;
 		if(*cur == '\0') return;
 
-		if(cur - pos == 0) return;
+		end = cur;
+		cur = pos;
 
-		bzero(buf, bufsize);
+		if(*pos == ':') return;
 
-		while((i < bufsize) && (i < cur - pos))
+		while(i < bufsize && pos[i] != ':')
 		{
 			buf[i] = pos[i];
 			i++;
@@ -106,6 +112,8 @@
 
 	void RTSPRequestParser::parsePassword(char *buf, int bufsize)
 	{
+		/* Получение пароля пользователя  */
+
 		if(buf == NULL || reslen <= 1) return;
 
 		int i = 0;
@@ -113,13 +121,15 @@
 		char cache[cachesize];
 		char *pos, *cur, *end;
 
+		bzero(buf, bufsize);
+
  		pos = strstr(result, "rtsp://");
 		if(pos == NULL) return;
 
 		cur = pos + strlen("rtsp://");
-		end = result + strlen(result);
+		end = result + reslen;
 
-		while(*cur != '/' && cur != end) cur++;
+		while(*cur != '/' && *cur != '\0') cur++;
 
 		while((i < cachesize) && (i < cur - pos))
 		{
@@ -127,53 +137,157 @@
 			i++;
 		}
 
-		i = 0;
 		cache[i] = '\0';
+		i = 0;
 
-		pos = cache;
+		pos = cache + strlen("rtsp://");
 		cur = pos;
-		end = strchr(cur, '@');
-		if(end == NULL) return;
+		end = cache + strlen(cache);
 
-		while(*cur != ':' && *cur != '\0') cur++;
+		while(*cur != '@' && cur != end) cur++;
 		if(*cur == '\0') return;
 
-		if(cur - pos == 0) return;
-		cur++;
+		end = cur;
 
-		bzero(buf, bufsize);
+		while(*pos++ != ':');
+		if(*pos == '@') return;
 
-		while((i < bufsize) && (i < end - cur))
+		while(i < bufsize && pos[i] != '@')
 		{
-			buf[i] = cur[i];
+			buf[i] = pos[i];
 			i++;
 		}
 
 		buf[i] = '\0';
 	}
 
-	void RTSPRequestParser::parseURL(char *buf, int bufsize)
+	void RTSPRequestParser::parseHost(char *buf, int bufsize)
 	{
+		/* Получение хоста  */
+
 		if(buf == NULL || reslen <= 1) return;
 
-		int i = 0;
+		int i = 0, j = 0;
 		int cachesize = 1024;
 		char cache[cachesize];
 		char *pos, *cur, *end;
 
+		bzero(buf, bufsize);
+
  		pos = strstr(result, "rtsp://");
 		if(pos == NULL) return;
 
-		cur = pos;
-		end = result + strlen(result);
+		cur = pos + strlen("rtsp://");
+		end = result + reslen;
 
-		while(*cur != '/' && cur != end) cur++;
+		while(*cur != '/' && *cur != '\0') cur++;
+
+		while((i < cachesize) && (i < cur - pos))
+		{
+			cache[i] = pos[i];
+			i++;
+		}
+
+		cache[i] = '\0';
+		i = 0;
+
+		pos = cache;
+		cur = strchr(pos, '@');
+		end = cache + strlen(cache);
+
+		while(i < bufsize && i < strlen("rtsp://"))
+		{
+			buf[i] = pos[i];
+			++i;
+		}
+
+		j = (cur == NULL) ? i : cur - pos + 1;
+
+		while(i < bufsize && pos[j] != ':' && pos[j] != '\0')
+		{
+			buf[i] = pos[j];
+			++i;	
+			++j;		
+		}
+
+		buf[i] = '\0';
 	}
 
-	 int RTSPRequestParser::parsePort()
-	 {
-	 	 return 0;
-	 }
+	int RTSPRequestParser::parsePort()
+	{
+		/* Получение порта */
+		
+		
+
+		return 0;
+	}
+
+	void RTSPRequestParser::parseURI(char *buf, int bufsize)
+	{
+		if(buf == NULL || reslen <= 1) return;
+
+		int i = 0, j = 0;
+		int cachesize = 1024;
+		char cache[cachesize];
+		char *pos, *cur, *end;
+
+		bzero(buf, bufsize);
+
+ 		pos = strstr(result, "rtsp://");
+		if(pos == NULL) return;
+
+		cur = pos + strlen("rtsp://");
+		end = result + reslen;
+
+		while(*cur != '/' && *cur != '\0') cur++;
+
+		while((i < cachesize) && (i < cur - pos))
+		{
+			cache[i] = pos[i];
+			i++;
+		}
+
+		cache[i] = '\0';
+		i = 0;
+
+		pos = cache;
+		cur = strchr(pos, '@');
+		end = cache + strlen(cache);
+
+		while(i < bufsize && i < strlen("rtsp://"))
+		{
+			buf[i] = pos[i];
+			++i;
+		}
+
+		j = (cur == NULL) ? i : cur - pos + 1;
+
+		while(i < bufsize && pos[j] != ':' && pos[j] != '\0')
+		{
+			buf[i] = pos[j];
+			++i;	
+			++j;		
+		}
+	
+		buf[i] = '\0';
+
+		cur = pos + j;
+
+		while(*cur != '/' && *cur != '\0') cur++;
+
+		if(*cur == '\0') return;
+
+		j += cur - pos;
+
+		while(i < bufsize && pos[j] != '\0')
+		{
+			buf[i] = pos[j];
+			++i;	
+			++j;		
+		}
+
+		buf[i] = '\0';
+	}
 
 	void RTSPRequestParser::parseURN(char *buf, int bufsize)
 	{
